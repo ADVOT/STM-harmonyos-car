@@ -1,0 +1,30 @@
+# ===== 大文件 / 第三方内容，不入库 =====
+# 虚拟机镜像（17GB，任务3 环境，本机保留即可）
+ubuntu-20.04.1-desktop-amd64/
+# lerobot 源码克隆（第三方仓库，AI 训练侧环境）
+lerobot/
+# 工具私有数据
+.reasonix/
+
+# ===== Keil MDK 构建产物与用户态文件 =====
+Demo_Code/Output/
+Demo_Code/Listing/
+*.bak
+*.uvgui*
+*.uvopt
+*.uvoptx
+*.dep
+*.saved_uv4
+JLink Regs CM3.txt
+JLinkSettings.ini
+
+# ===== 本地文档/资料不入库：仓库只保留功能代码 =====
+/README.md
+/SETUP.md
+/AGENTS.md
+/course_guides.json
+/*.pdf
+
+# ===== 系统杂项 =====
+Thumbs.db
+Desktop.ini
