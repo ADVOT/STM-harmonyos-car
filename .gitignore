@@ -9,6 +9,10 @@ lerobot/
 # ===== Keil MDK 构建产物与用户态文件 =====
 Demo_Code/Output/
 Demo_Code/Listing/
+# print_io 及任意层级的 Keil 构建/调试目录
+OBJ/
+Listings/
+DebugConfig/
 *.bak
 *.uvgui*
 *.uvopt
@@ -24,6 +28,13 @@ JLinkSettings.ini
 /AGENTS.md
 /course_guides.json
 /*.pdf
+/教学计划_*
+/tools/
+/backups/
+/*.zip
+/*.rar
+/ST-LINK_Utility_3.1/
+/notes/
 
 # ===== 系统杂项 =====
 Thumbs.db
