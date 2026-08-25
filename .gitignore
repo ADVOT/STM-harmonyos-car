@@ -1,0 +1,34 @@
+# ===== 大文件 / 第三方内容，不入库 =====
+# 虚拟机镜像（17GB，任务3 环境，本机保留即可）
+ubuntu-20.04.1-desktop-amd64/
+lerobot/
+.reasonix/
+Demo_Code/Output/
+Demo_Code/Listing/
+OBJ/
+Listings/
+DebugConfig/
+*.bak
+*.uvgui*
+*.uvopt
+*.uvoptx
+*.dep
+*.saved_uv4
+JLink Regs CM3.txt
+JLinkSettings.ini
+/out/
+/README.md
+/SETUP.md
+/AGENTS.md
+/course_guides.json
+/*.pdf
+/实验计划_*
+/tools/
+/backups/
+/docx/
+/*.zip
+/*.rar
+/ST-LINK_Utility_3.1/
+/notes/
+Thumbs.db
+Desktop.ini
