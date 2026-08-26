@@ -17,7 +17,6 @@ DebugConfig/
 JLink Regs CM3.txt
 JLinkSettings.ini
 /out/
-/README.md
 /SETUP.md
 /AGENTS.md
 /course_guides.json
