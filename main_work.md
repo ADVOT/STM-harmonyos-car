@@ -5,6 +5,8 @@
 ## 仓库内容概览
 
 - `print_io/`：STM32F103 Keil MDK 工程（标准外设库），QST"先锋号"从核心（运动执行侧）固件的开发基础
+- `motor_pwm/`：任务21 工程（print_io 副本 + 自写电机驱动模块），TIM4 双路 PWM 驱动双电机
+- `README.md`：GitHub 仓库展示页（项目简介 / 架构 / 进度）
 - `学习记录.md`：实训过程中的理解性收获（原理、机制、踩坑分析）
 
 ## print_io 工程（对应任务18/19）
@@ -27,5 +29,20 @@
 - **非阻塞灯效改造**：原版 `L_runingled()` 内含 `while(1)` 死循环会堵死串口接收；改造后每个灯效函数每次调用只播**一帧**，动画进度用 `static` 变量跨调用记忆，主循环按当前模式分发——新命令随时可打断切换
 - **新增函数**：`fx_hello_frame()`（前后流光）、`fx_blink_frame()`（12 颗同步闪烁）、`fx_rain_frame()`（雨滴换色）、`fx_flow_frame()`（流水扫描）、`led_all_on()` / `led_all_off()`
 
+## motor_pwm 工程（对应任务21）
+
+### 4. TIM4 PWM 电机驱动
+
+- 自写 `QST_HARDWARE/motor/motor.c/.h` 三函数模块：`Motor_Init()`（PB13/PB14 方向脚推挽输出）、`PWM_Init(arr,psc)`（PB6/PB7 复用推挽交权 TIM4，ARR=7199/PSC=9 → 1kHz）、`Set_Pwm(moto1,moto2)`（符号定方向、绝对值定占空比，反转时比较值反相 `7199-|x|`）
+- 引脚映射：右电机 PWM=PB6(TIM4_CH1)/方向=PB13，左电机 PWM=PB7(TIM4_CH2)/方向=PB14
+- `main.c` 电机版：框架初始化 → `PWM_Init(7199,9)` → 主循环 `Set_Pwm(2500,2500)`（约 35% 占空比双轮前进）
+- 工程接线：uvprojx 手工加入 motor.c（HARDWARE 分组）与 `..\QST_HARDWARE\motor` 头文件路径；命令行编译 `"C:\Keil_v5\UV4\UV4.exe" -b Template.uvprojx -j0 -o build_log.txt` 0 Error
+- 8-26 实机验证：架空开电池，双轮同速转动 ✅
+
+### 5. 本次提交附带的仓库维护
+
+- 新增 `README.md`（GitHub 展示页），`.gitignore` 移除 `/README.md` 排除规则使其可入库
+- `学习记录.md` 8-26 新增第 8~10 条（互斥锁 vs 线程调度、库函数分层、PWM 调压原理）
+
 ---
-最近更新：2026-08-25
+最近更新：2026-08-26
