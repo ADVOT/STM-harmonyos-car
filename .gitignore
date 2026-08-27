@@ -10,6 +10,7 @@ Listings/
 DebugConfig/
 *.bak
 *.uvgui*
+build_log.txt
 *.uvopt
 *.uvoptx
 *.dep
