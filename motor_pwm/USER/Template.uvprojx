@@ -337,7 +337,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\USER;..\CORE;..\STM32F10x_FWLib\inc;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\QST_HARDWARE\colorful_led;..\QST_HARDWARE\SYSTEM_CONTROL;..\QST_HARDWARE\motor</IncludePath>
+              <IncludePath>..\USER;..\CORE;..\STM32F10x_FWLib\inc;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\QST_HARDWARE\colorful_led;..\QST_HARDWARE\SYSTEM_CONTROL;..\QST_HARDWARE\motor;..\QST_HARDWARE\encoder</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -565,6 +565,11 @@
               <FileName>motor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\QST_HARDWARE\motor\motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>encoder.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\QST_HARDWARE\encoder\encoder.c</FilePath>
             </File>
           </Files>
         </Group>
