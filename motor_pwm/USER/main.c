@@ -5,6 +5,7 @@
 #include "delay.h"
 #include "usart.h"
 #include "protocol.h"
+#include "colorful_led.h"
 
 #define MAX_TARGET_SPEED       420
 #define MOTION_LEASE_MS        300U
@@ -94,6 +95,107 @@ static void ServiceMotionLease(void)
     if ((u32)(now - last_motion_ms) >= MOTION_LEASE_MS)
     {
         StopMotion();
+    }
+}
+
+/* ---- Turn-signal corner lamps (WS2812, front strip PC13 / rear strip PC14)
+   Pure chassis feature: derives the lit corner from the commanded wheel
+   speeds, so STOP and lease expiry clear the lamps automatically.
+   diff = right-left > 0 means CCW rotation (nose swings left); when
+   reversing (sum < 0) the rear swings to the opposite side, which is why
+   the rear corners are mirrored against the front ones. Pivot in place
+   (sum ~ 0) is treated as a forward turn: only the front lamp lights. */
+
+#define TURN_LIGHT_DZ         10     /* deadband; targets are 0/+-30/+-60/+-140 */
+#define TURN_LIGHT_RESEND_MS  500U   /* re-push period: self-heal glitched frames */
+
+/* Corner LED indices (1..6) on each strip; each corner lights 2 adjacent
+   LEDs. 9-01 on-car test: initial 1-2/5-6 guess came out mirrored, so the
+   L/R pairs below are the swapped (verified) assignment. */
+#define FRONT_LEFT_A    5U
+#define FRONT_LEFT_B    6U
+#define FRONT_RIGHT_A   1U
+#define FRONT_RIGHT_B   2U
+#define REAR_LEFT_A     5U
+#define REAR_LEFT_B     6U
+#define REAR_RIGHT_A    1U
+#define REAR_RIGHT_B    2U
+
+typedef enum
+{
+    CORNER_NONE = 0,
+    CORNER_FRONT_LEFT,
+    CORNER_FRONT_RIGHT,
+    CORNER_REAR_LEFT,
+    CORNER_REAR_RIGHT
+} TurnLightCorner;
+
+static TurnLightCorner ResolveTurnCorner(void)
+{
+    int diff = target_speed_right - target_speed_left;
+    int sum = target_speed_right + target_speed_left;
+
+    if (diff > TURN_LIGHT_DZ)            /* CCW: nose left */
+    {
+        return (sum < -TURN_LIGHT_DZ) ? CORNER_REAR_RIGHT : CORNER_FRONT_LEFT;
+    }
+    if (diff < -TURN_LIGHT_DZ)           /* CW: nose right */
+    {
+        return (sum < -TURN_LIGHT_DZ) ? CORNER_REAR_LEFT : CORNER_FRONT_RIGHT;
+    }
+    return CORNER_NONE;
+}
+
+static void RenderTurnCorner(TurnLightCorner corner)
+{
+    u8 i;
+
+    for (i = 1; i <= led_num; i++)
+    {
+        L_ws2812_rgb(i, WS_DARK);
+        R_ws2812_rgb(i, WS_DARK);
+    }
+
+    switch (corner)
+    {
+        case CORNER_FRONT_LEFT:
+            L_ws2812_rgb(FRONT_LEFT_A, WS_YELLOW);
+            L_ws2812_rgb(FRONT_LEFT_B, WS_YELLOW);
+            break;
+        case CORNER_FRONT_RIGHT:
+            L_ws2812_rgb(FRONT_RIGHT_A, WS_YELLOW);
+            L_ws2812_rgb(FRONT_RIGHT_B, WS_YELLOW);
+            break;
+        case CORNER_REAR_LEFT:
+            R_ws2812_rgb(REAR_LEFT_A, WS_YELLOW);
+            R_ws2812_rgb(REAR_LEFT_B, WS_YELLOW);
+            break;
+        case CORNER_REAR_RIGHT:
+            R_ws2812_rgb(REAR_RIGHT_A, WS_YELLOW);
+            R_ws2812_rgb(REAR_RIGHT_B, WS_YELLOW);
+            break;
+        default:
+            break;
+    }
+
+    L_ws2812_refresh(led_num);
+    R_ws2812_refresh(led_num);
+}
+
+static void TurnLightService(u32 now)
+{
+    static TurnLightCorner active = CORNER_NONE;
+    static u8 initialized = 0U;
+    static u32 last_refresh_ms = 0U;
+    TurnLightCorner wanted = ResolveTurnCorner();
+
+    if ((initialized == 0U) || (wanted != active) ||
+        ((u32)(now - last_refresh_ms) >= TURN_LIGHT_RESEND_MS))
+    {
+        RenderTurnCorner(wanted);
+        active = wanted;
+        last_refresh_ms = now;
+        initialized = 1U;
     }
 }
 
@@ -288,6 +390,7 @@ int main(void)
     Encoder_Init_TIM2();
     Encoder_Init_TIM3();
     PWM_Init(7199, 9);
+    colorful_led_Init();
     Set_Pwm(0, 0);
     SysTick_Config(72000000 / 1000);
 
@@ -298,6 +401,7 @@ int main(void)
             HandleEvent(&event);
         }
         ServiceMotionLease();
+        TurnLightService(Main_GetMillis());
         if (Main_TakeControlDue() != 0U)
         {
             System_Control();
