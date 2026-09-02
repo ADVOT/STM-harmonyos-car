@@ -30,5 +30,9 @@ JLinkSettings.ini
 /*.rar
 /ST-LINK_Utility_3.1/
 /notes/
+# 目标2(避障)/目标3(迷宫)/防坠落决策算法相关工程，本地保留不入库（8-28/8-29 桃定）
+/harmony_app/F.*/
+/harmony_app/G.0_Ble_Turn_Calib/
+/harmony_app/G.1_Spin_Calib/
 Thumbs.db
 Desktop.ini

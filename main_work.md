@@ -9,6 +9,7 @@
 - `nfc_card/`：任务20 NFC 读卡工程（print_io 副本 + 自写 `QST_HARDWARE/nfc/` 模块），UART2 驱动 PN532（见第 9 节）
 - `README.md`：GitHub 仓库展示页（项目简介 / 架构 / 进度）
 - `学习记录.md`：实训过程中的理解性收获（原理、机制、踩坑分析）
+- `harmony_app/`：Hi3861（主核心/OpenHarmony 侧）自写应用工程，选择性入库——`6.0_Sum_Experiment_First`（任务10 综合联动）、`9.0_Oled_Uart_Light`（OLED 遥测上屏+光照控屏）、`G.2_Ble_Remote`（任务26 BLE 蓝牙遥控，见第 10 节）
 
 ## print_io 工程（对应任务18/19）
 
@@ -80,5 +81,16 @@
 - 测试卡 Mifare Classic 1K（16 扇区/64 块/1024B，SAK 0x08、ATQA 0x0004），UID `63 1F 49 06`（App 卡号 105455459 为其倒序十进制）
 - 8-28 实机验证：唤醒应答、寻卡应答、UID 命中、灯效反馈全对 ✅
 
+## harmony_app 工程（Hi3861 应用侧）
+
+### 10. BLE 蓝牙遥控小车（任务26，`G.2_Ble_Remote`）
+
+- **链路**：手机蓝牙调试器 APP → JDY-16 模块 → Hi3861 **UART1**（GPIO0/1，9600）解析命令 → **UART2**（GPIO11/12，115200）→ STM32（复用任务24 协议帧，见第 8 节）；STM32 侧零改动
+- **双串口并发常开**：两路 UART 开机各 Init 一次、不再切换——命令即时生效，运动中可 `S` 急停 / 新命令抢占；运动期每 10ms 重发 SET_SPEED 心跳（远小于 STM32 侧 300ms 运动租约）
+- **命令**：`F/B/L/R` 前进/后退/原地左转/原地右转各 500ms 自停，`f/b` 长版 2000ms，`S` 立即停
+- **链路自诊断**：开机自动 PING + 每秒打印 `sent/ack_ok/ack_bad` 计数，UART2 RX 回读 STM32 ACK 帧（0x81）——链路断在哪一环（Hi3861/线束/STM32 执行侧）从日志直接可判
+- **关键坑（双串口并发失败根因）**：每开一路 UART 需从事件对象池申请一个事件（`uart_open` 内 `hi_event_create`），池大小由 `app_main.c` 的 `APP_INIT_EVENT_NUM`（默认 4）决定，开机系统已占 UART0/UART1 两个——两路用户串口同时 Init 时后一路失败，官方修法为 `APP_INIT_EVENT_NUM` 改 7（任务26 教学计划）。此前"HAL 只支持单路用户 UART"的判断为误诊，详见学习记录 9-02
+- 9-02 实机验证通过：蓝牙连接后发指令即动 ✅
+
 ---
-最近更新：2026-08-29
+最近更新：2026-09-02
