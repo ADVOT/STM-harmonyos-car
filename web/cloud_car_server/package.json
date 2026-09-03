@@ -1,0 +1,16 @@
+{
+  "name": "cloud-car-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "本地小后端：网页 -> 华为云 IoTDA 应用侧 REST -> 小车 Hi3861",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@huaweicloud/huaweicloud-sdk-iotda": "^3.1.211",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "uuid": "^14.0.2"
+  }
+}

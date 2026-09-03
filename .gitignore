@@ -34,5 +34,14 @@ JLinkSettings.ini
 /harmony_app/F.*/
 /harmony_app/G.0_Ble_Turn_Calib/
 /harmony_app/G.1_Spin_Calib/
+# 华为云网页控制：密钥/依赖/真实设备配置不入库（保留 .example 模板）
+/web/cloud_car_server/.env
+/web/cloud_car_server/node_modules/
+/harmony_app/12.0_MQTT_Cloud_Control/include/cloud_config.h
+# 华为云 AK/SK 凭证明文（根目录），绝不入库
+/credentials.csv
+# 后端运行日志（含 device_id/endpoint），不入库
+/web/cloud_car_server/server_run.log
+/web/cloud_car_server/*.log
 Thumbs.db
 Desktop.ini

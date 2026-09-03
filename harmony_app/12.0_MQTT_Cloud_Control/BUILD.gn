@@ -1,0 +1,47 @@
+static_library("MQTT_Cloud_Control") {
+    sources = [
+        "src/MQTT_Cloud_Control.c",
+        "src/oc_mqtt.c",
+        "src/oc_mqtt_profile_package.c",
+
+        # 传感器驱动（复用 8.0_Sht20 温湿度 + 9.0 AP3216C 光照，均挂 I2C0 GPIO9/10）
+        "src/hal_bsp_sht20.c",
+        "src/hal_bsp_ap3216c.c",
+
+        # paho_mqtt（一次性拷到 VM //third_party/paho_mqtt，来源 supportPack/paho_mqtt）
+        "//third_party/paho_mqtt/MQTTClient-C/src/liteOS/MQTTLiteOS.c",
+        "//third_party/paho_mqtt/MQTTClient-C/src/MQTTClient.c",
+        "//third_party/paho_mqtt/MQTTPacket/src/MQTTConnectClient.c",
+        "//third_party/paho_mqtt/MQTTPacket/src/MQTTConnectServer.c",
+        "//third_party/paho_mqtt/MQTTPacket/src/MQTTDeserializePublish.c",
+        "//third_party/paho_mqtt/MQTTPacket/src/MQTTFormat.c",
+        "//third_party/paho_mqtt/MQTTPacket/src/MQTTPacket.c",
+        "//third_party/paho_mqtt/MQTTPacket/src/MQTTSerializePublish.c",
+        "//third_party/paho_mqtt/MQTTPacket/src/MQTTSubscribeClient.c",
+        "//third_party/paho_mqtt/MQTTPacket/src/MQTTSubscribeServer.c",
+        "//third_party/paho_mqtt/MQTTPacket/src/MQTTUnsubscribeClient.c",
+        "//third_party/paho_mqtt/MQTTPacket/src/MQTTUnsubscribeServer.c",
+    ]
+
+    cflags = [
+        "-Wno-unused-variable",
+        "-Wno-unused-but-set-variable",
+        "-Wno-unused-parameter",
+        "-Wno-sign-compare",
+        "-Wno-unused-function",
+        "-Wno-return-type",
+    ]
+
+    include_dirs = [
+        "include",
+        "//third_party/cJSON",
+        "//third_party/paho_mqtt/MQTTPacket/src",
+        "//third_party/paho_mqtt/MQTTClient-C/src",
+        "//third_party/paho_mqtt/MQTTClient-C/src/liteOS",
+        "//utils/native/lite/include",
+        "//kernel/liteos_m/components/cmsis/2.0",
+        "//base/iot_hardware/interfaces/kits/wifiiot_lite",
+        "//foundation/communication/interfaces/kits/wifi_lite/wifiservice",
+        "//vendor/hisi/hi3861/hi3861/third_party/lwip_sack/include/",
+    ]
+}
