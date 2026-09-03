@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>华为云小车遥控</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <h1>华为云 IoTDA · 小车遥控</h1>
+    <p class="sub">网页 → 本地后端 → 华为云 → Hi3861 → STM32 电机</p>
+
+    <div class="panel">
+      <p class="sub" style="margin:0">按住 方向键 / 按钮 持续前进，松开即停；空格 = 急停。换向直接按另一个键即可。</p>
+    </div>
+
+    <div class="pad">
+      <div class="row">
+        <button data-dir="FWD" class="dir up">前进</button>
+      </div>
+      <div class="row">
+        <button data-dir="LEFT" class="dir">左转</button>
+        <button data-dir="STOP" class="dir stop">停止</button>
+        <button data-dir="RIGHT" class="dir">右转</button>
+      </div>
+      <div class="row">
+        <button data-dir="BACK" class="dir down">后退</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="status-head">
+        <span>遥测（阶段二）</span>
+        <button id="refresh" class="mini">刷新</button>
+        <label class="auto"><input id="auto" type="checkbox" /> 自动每 2s</label>
+      </div>
+      <pre id="shadow" class="box">尚未获取</pre>
+    </div>
+
+    <div class="panel">
+      <span>下发日志</span>
+      <pre id="log" class="box">就绪。</pre>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
