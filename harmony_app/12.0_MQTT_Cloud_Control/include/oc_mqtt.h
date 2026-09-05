@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include "cloud_config.h"
 
-/* 接入域名/端口统一从 cloud_config.h 取（桃填自己实例的值） */
+/* 接入域名/端口统一从 cloud_config.h 取（USER填自己实例的值） */
 #define OC_SERVER_IP                CLOUD_MQTT_HOST
 #define OC_SERVER_PORT              CLOUD_MQTT_PORT
 #define OC_CLIENT_ID_LEN          128

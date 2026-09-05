@@ -50,7 +50,7 @@ extern unsigned int UartIsBufEmpty(WifiIotUartIdx id, unsigned char *empty);
 #define STATUS_POLL_TICKS                 20U   /* 200 ms GET_STATUS cadence */
 #define PANEL_LOOP_TICKS                  30U   /* 300 ms: ALS sample + refresh */
 
-/* ALS is a 16-bit raw count, not lux. Gate fixed by Tao on 8-31 desk test:
+/* ALS is a 16-bit raw count, not lux. Gate fixed by USER on 8-31 desk test:
    below 100 = dark (panel ON), above 100 = lit (panel OFF); exactly 100
    holds the current state (single-count dead band against boundary jitter).
    If the panel's own glow ever oscillates the reading, widen HYSTERESIS. */

@@ -1,0 +1,18 @@
+import("//build/lite/config/component/lite_component.gni")
+
+lite_component("app") {
+    features = [
+        "startup",
+        #"1.0_Hello_World:hello_world",
+        #"2.0_TCRT_Timer:TCRT",
+        #"3.0_SG90_Mutex:SG90",
+        #"4.0_Hcsr04_Tick:Hcsr04",
+        #"5.0_Uart_BLE:Uart",
+        #"6.0_Sum_Experiment_First:Sum_Experiment_First",
+        "F.0_Tabletop_Cliff_Avoidance:Tabletop_Cliff_Avoidance",
+        #"G.0_Ble_Turn_Calib:Ble_Turn_Calib",
+        #"G.1_Spin_Calib:Spin_Calib",
+        #"7.0_I2c_Ssd1306:I2c_Ssd1306",
+        #"8.0_Sht20:Sht20",
+    ]
+}
