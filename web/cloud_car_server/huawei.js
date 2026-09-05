@@ -3,7 +3,7 @@
 /*
  * 华为云 IoTDA 应用侧调用 —— 使用官方 SDK（@huaweicloud/huaweicloud-sdk-iotda）
  * 签名(SDK-HMAC-SHA256 / 派生 iotdm)由 SDK 内部处理，无需手写。
- * 对外暴露：sendCommand(dir,duration) 与 getShadow()，均返回归一化结果
+ * 对外暴露：sendCommand(dir,duration)、getShadow()、getDeviceStatus()，均返回归一化结果
  *   { ok, status, data?, error_code?, error_msg? }
  */
 
@@ -83,4 +83,24 @@ async function getShadow() {
   }
 }
 
-module.exports = { sendCommand, getShadow };
+// 查设备真实在线状态（ONLINE/OFFLINE）与最近连接更新时间
+async function getDeviceStatus() {
+  try {
+    const client = buildClient();
+    const req = new iotda.ShowDeviceRequest(DEVICE_ID);
+    const resp = await client.showDevice(req);
+    return {
+      ok: true,
+      status: 200,
+      data: {
+        status: resp.status || null,
+        connection_update_time: resp.connectionStatusUpdateTime || resp.connection_status_update_time || null,
+        device_name: resp.deviceName || resp.device_name || null,
+      },
+    };
+  } catch (e) {
+    return normalizeError(e);
+  }
+}
+
+module.exports = { sendCommand, getShadow, getDeviceStatus };
