@@ -1,0 +1,12 @@
+static_library("Sht20") {
+    sources = [
+        "Sht20.c",
+        "src/hal_bsp_sht20.c"
+    ]
+    include_dirs = [
+        "//utils/native/lite/include",
+        "//kernel/liteos_m/components/cmsis/2.0",
+        "//base/iot_hardware/interfaces/kits/wifiiot_lite",
+        "include"
+    ]
+}
