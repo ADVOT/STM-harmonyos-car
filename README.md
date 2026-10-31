@@ -1,6 +1,6 @@
 # STM-harmonyos-car — QST"先锋号"鸿蒙智能小车实训
 
-北京航空航天大学 2026 实训项目：基于 **Hi3861（OpenHarmony / LiteOS-M）+ STM32F103** 双核心架构的智能运动小车。
+个人实训项目：基于 **Hi3861（OpenHarmony / LiteOS-M）+ STM32F103** 双核心架构的智能运动小车。
 
 ## 最终目标
 
